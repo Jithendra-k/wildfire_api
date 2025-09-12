@@ -1,0 +1,25 @@
+steps:
+  # Step 1: Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/code-for-planet/wildfire-repo/wildfire-api:$COMMIT_SHA', '.']
+
+  # Step 2: Push image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/code-for-planet/wildfire-repo/wildfire-api:$COMMIT_SHA']
+
+  # Step 3: Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      [
+        'run', 'deploy', 'wildfire-api',
+        '--image', 'us-central1-docker.pkg.dev/code-for-planet/wildfire-repo/wildfire-api:$COMMIT_SHA',
+        '--region', 'us-central1',
+        '--platform', 'managed',
+        '--allow-unauthenticated',
+        '--memory', '16Gi',
+        '--cpu', '4'
+      ]
+
+images:
+  - 'us-central1-docker.pkg.dev/code-for-planet/wildfire-repo/wildfire-api:$COMMIT_SHA'

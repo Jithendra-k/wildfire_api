@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+pandas
+numpy
+scikit-learn
+google-cloud-storage
+joblib
+pyarrow
+fastparquet
