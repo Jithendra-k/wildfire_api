@@ -7,3 +7,4 @@ google-cloud-storage
 joblib
 pyarrow
 fastparquet
+xgboost
