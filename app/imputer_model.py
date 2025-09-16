@@ -1,6 +1,9 @@
 # app/imputer_model.py
 import numpy as np
 import pandas as pd
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
+
 
 class WildfireImputer:
     def __init__(self, df, numeric_cols, geo_block, scaler, knn_index, k=10):
@@ -38,6 +41,8 @@ class WildfireImputer:
         else:
             nearest = neighbor_values.iloc[0]
             for col in self.geo_block:
+                if col in ["state", "county"]:
+                    user_df[col] = user_df[col].astype("object")
                 user_df.loc[0, col] = nearest[col]
 
         # derived DOY features
