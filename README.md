@@ -6,6 +6,26 @@ This project contains a FastAPI service for wildfire prediction and imputation, 
 
 ## Deployment Workflow
 
+### Branching Strategy
+- **`dev` branch**  
+  - Used for development and testing.  
+  - Linked to a separate Cloud Build trigger (optional) that deploys to a staging Cloud Run service.  
+  - Allows validation of new endpoints and features before merging.  
+
+- **`main` branch**  
+  - Production-ready branch.  
+  - Cloud Build Trigger deploys automatically when new commits are pushed.  
+  - Deploys to the production Cloud Run service.  
+
+**Flow:**  
+```text
+   [dev branch]  --->  Test deployment (staging)
+        |
+        v
+   Merge into main  --->  Production deployment (Cloud Run)
+```
+
+### CI/CD Pipeline (for `main`)
 1. **Push Code to GitHub (`main` branch)**  
    - Cloud Build Trigger fires automatically.  
    - Builds Docker image.  
@@ -59,3 +79,4 @@ gcloud run deploy wildfire-api \
   --allow-unauthenticated \
   --memory 16Gi \
   --cpu 4
+```
