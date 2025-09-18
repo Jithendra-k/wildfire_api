@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from typing import Optional, Dict, Any
 from app.imputer import impute_features
 from app.model_download import xgb_best_model, xgb_hazard_model
-from app import risk_heatmap   # import your new router
+from app import risk_heatmap, emissions
 
 app = FastAPI(title="Wildfire API", version="1.0")
 
@@ -79,3 +79,7 @@ def predict_endpoint(request: ImputeRequest):
 # ---------- Risk Heatmap Endpoint ----------
 # include the router from app/risk_heatmap.py
 app.include_router(risk_heatmap.router)
+
+# include emission router
+# The existing include should work, but make sure it's there
+app.include_router(emissions.router, prefix="/api", tags=["emissions"])
