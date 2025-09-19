@@ -16,7 +16,7 @@ def get_emissions(
         year: Optional[int] = Query(None),
         emission_intensity: Optional[str] = Query(None),
         size_category: Optional[str] = Query(None),
-        limit: int = Query(100, ge=1, le=5000)
+        limit: int = Query(10000, ge=1, le=1028764)
 ):
     """Retrieve wildfire emission events with optional filters."""
 
