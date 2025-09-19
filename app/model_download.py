@@ -29,7 +29,9 @@ with warnings.catch_warnings():
     warnings.simplefilter("ignore", category=Warning)  # broad filter if needed
 
     xgb_best_path = download_if_needed("xgb_best_model.pkl")
+    random_forest_model_path = download_if_needed("RandomForestRegressor_model.pkl")
     xgb_hazard_path = download_if_needed("xgb_hazard_calibrated.pkl")
 
     xgb_best_model = joblib.load(xgb_best_path)
+    random_forest_model = joblib.load(random_forest_model_path)
     xgb_hazard_model = joblib.load(xgb_hazard_path)
