@@ -2,10 +2,13 @@ from fastapi import APIRouter, Query, HTTPException
 from typing import Optional
 from google.cloud import bigquery
 import pandas as pd
+import gcsfs
+import json
 
 router = APIRouter()
 bq_client = bigquery.Client()
 
+SAMPLE_JSON_PATH = "data_housee/wildfire_ml_models/ml_charts/wildfire_emissions_sample.json"
 TABLE = "code-for-planet.data_housee.wildfire_event_emissions_clean"
 
 
@@ -131,6 +134,25 @@ def get_emissions(
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error retrieving emission data: {str(e)}")
+
+
+@router.get("/emissions/sample")
+def get_emissions_sample():
+    """Retrieve pre-sampled 5000 wildfire emission events from GCS JSON."""
+
+    try:
+        fs = gcsfs.GCSFileSystem()
+        with fs.open(SAMPLE_JSON_PATH, "r") as f:
+            data = json.load(f)
+
+        return {
+            "message": f"Loaded {data.get('count', len(data.get('events', [])))} sample emission events",
+            "events": data.get("events", []),
+            "count": data.get("count", len(data.get("events", [])))
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error loading emission sample: {str(e)}")
 
 
 @router.get("/emissions/summary")
